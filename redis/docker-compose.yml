@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   redis:
-    image: redis:7-alpine
+    image: redis:8.6.1
     ports:
       - "6379:6379"
     volumes:
@@ -11,15 +11,18 @@ services:
       - ./conf/redis.conf:/usr/local/etc/redis/redis.conf
     restart: unless-stopped
     command: redis-server /usr/local/etc/redis/redis.conf
+    environment:
+      - TZ=Asia/Shanghai
     networks:
       - redis-network
 
   redis-commander:
-    image: rediscommander/redis-commander:latest
+    image: rediscommander/redis-commander:redis-commander-210
     ports:
       - "8081:8081"
     environment:
       - REDIS_HOSTS=local:redis:6379
+      - TZ=Asia/Shanghai
     restart: unless-stopped
     depends_on:
       - redis
