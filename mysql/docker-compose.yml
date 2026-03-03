@@ -25,7 +25,7 @@ services:
       - mysql-network
 
   phpmyadmin:
-    image: phpmyadmin:latest
+    image: phpmyadmin:5.2.3
     ports:
       - "8080:80"
     environment:
