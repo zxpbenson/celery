@@ -6,8 +6,7 @@ Nginx 是一个高性能的 HTTP 和反向代理服务器，也是一个 IMAP/PO
 
 | 服务 | 端口 | 说明 |
 |------|------|------|
-| nginx | 80, 443 | Nginx 主服务 |
-| nginx-proxy | 81 | Docker 自动反向代理 |
+| nginx-proxy-manager | 80, 443, 81 | Nginx Proxy Manager（含 Web 管理界面） |
 
 ## 目录结构
 
@@ -15,10 +14,12 @@ Nginx 是一个高性能的 HTTP 和反向代理服务器，也是一个 IMAP/PO
 nginx/
 ├── docker-compose.yml
 ├── README.md
-├── conf/
-│   ├── nginx.conf           # Nginx 主配置文件
-│   └── sites-available/     # 站点配置目录
-│       └── default.conf     # 默认站点配置
+├── data/                    # Nginx Proxy Manager 数据存储
+├── letsencrypt/             # Let's Encrypt 证书存储
+├── conf/                    # 配置文件（仅用于兼容）
+│   ├── nginx.conf
+│   └── sites-available/
+│       └── default.conf
 ├── html/                    # 静态文件目录
 ├── logs/                    # 日志目录
 │   ├── access.log
@@ -40,6 +41,16 @@ docker-compose up -d
 docker-compose down
 ```
 
+### 访问管理界面
+
+- **管理界面**: http://localhost:81
+- **默认登录**: admin@example.com / changeme
+
+```yaml
+environment:
+  - TZ=Asia/Shanghai  # 修改为所需的时区
+```
+
 ### 重载配置
 
 ```bash
@@ -54,14 +65,18 @@ docker exec nginx_nginx_1 nginx -t
 
 ## 访问地址
 
-- **Nginx 主服务**: http://localhost
-- **Nginx Proxy**: http://localhost:81
+- **Nginx Proxy Manager**: http://localhost
+- **管理界面**: http://localhost:81
 
 ## 基本使用
 
-### 添加新站点
+### 通过 Web 管理界面添加站点
 
-1. 在 `conf/sites-available/` 目录下创建新的配置文件：
+1. 访问管理界面: http://localhost:81
+2. 使用默认凭证登录: admin@example.com / changeme
+3. 在 "Hosts" > "Add Proxy Host" 中添加新的反向代理配置
+4. 配置域名、后端地址、SSL 证书等参数
+5. 保存后自动生效，无需手动重载
 
 ```nginx
 server {
@@ -84,8 +99,9 @@ docker exec nginx_nginx_1 nginx -s reload
 
 ### 配置 HTTPS
 
-1. 将 SSL 证书放入 `certs/` 目录
-2. 修改站点配置：
+1. 在管理界面的 "SSL Certificates" 中上传证书
+2. 或在 "Hosts" > "Add Proxy Host" 中启用 Let's Encrypt 自动申请
+3. 选择域名并启用 HTTPS，系统将自动配置和续期
 
 ```nginx
 server {
@@ -108,7 +124,12 @@ server {
 
 ## 常用配置示例
 
-### 反向代理
+### 反向代理（通过管理界面）
+
+1. 在管理界面 "Hosts" > "Add Proxy Host" 中配置
+2. 设置域名、后端地址、端口
+3. 启用 HTTPS（可选）
+4. 保存后自动生效
 
 ```nginx
 location /api/ {
@@ -137,6 +158,7 @@ server {
 ## 注意事项
 
 1. 默认配置仅用于开发环境
-2. 日志会持久化到本地目录
-3. 如需修改配置，编辑后执行重载命令
+2. 日志和数据会持久化到本地目录
+3. 所有配置通过 Web 管理界面完成，无需手动编辑配置文件
 4. 生产环境请配置 HTTPS 和适当的安全策略
+5. 默认凭证 admin@example.com / changeme 请在首次登录后立即修改
