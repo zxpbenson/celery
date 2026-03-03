@@ -10,6 +10,8 @@ services:
     volumes:
       - ./data/nsqlookupd:/data
       - ./logs/nsqlookupd:/var/log/nsq
+    environment:
+      - TZ=Asia/Shanghai
     restart: unless-stopped
     networks:
       - nsq-network
@@ -23,6 +25,8 @@ services:
     volumes:
       - ./data/nsqd:/data
       - ./logs/nsqd:/var/log/nsq
+    environment:
+      - TZ=Asia/Shanghai
     restart: unless-stopped
     depends_on:
       - nsqlookupd
@@ -36,6 +40,8 @@ services:
       - "4171:4171"
     volumes:
       - ./logs/nsqadmin:/var/log/nsq
+    environment:
+      - TZ=Asia/Shanghai
     restart: unless-stopped
     depends_on:
       - nsqlookupd
