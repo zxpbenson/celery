@@ -3,10 +3,10 @@ version: '3.8'
 services:
   nsqlookupd:
     image: nsqio/nsq:v1.3.0
-    command: /nsqlookupd
+    command: /nsqlookupd --broadcast-address=your-host-ip
     ports:
-      - "4160:4160"
-      - "4161:4161"
+      - "4160:4160" # tcp
+      - "4161:4161" # http
     volumes:
       - ./data/nsqlookupd:/data
       - ./logs/nsqlookupd:/var/log/nsq
@@ -18,10 +18,10 @@ services:
 
   nsqd:
     image: nsqio/nsq:v1.3.0
-    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160
+    command: /nsqd --lookupd-tcp-address=nsqlookupd:4160 --broadcast-address=your-host-ip
     ports:
-      - "4150:4150"
-      - "4151:4151"
+      - "4150:4150" # tcp
+      - "4151:4151" # http
     volumes:
       - ./data/nsqd:/data
       - ./logs/nsqd:/var/log/nsq
