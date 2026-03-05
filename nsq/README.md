@@ -106,7 +106,7 @@ curl http://localhost:4161/channels?topic=test_topic
 - **nsqlookupd**: 使用 `--broadcast-address` 参数配置广播地址
 - **nsqd**: 使用 `--broadcast-address` 参数配置广播地址
 
-当前配置使用 `127.0.0.1` 作为广播地址，适用于本地开发。如需从其他机器访问，请修改为实际的宿主主机 IP 地址：
+注意：当前配置使用 `127.0.0.1` 作为广播地址，适用于本地开发。如需从其他机器访问，请修改为实际的宿主主机 IP 地址：
 
 ```yaml
 # nsqlookupd
