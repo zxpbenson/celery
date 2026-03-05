@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: docker.io/bitnamilegacy/zookeeper:3.9.2
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data/zookeeper:/bitnami/zookeeper/data
+      - ./logs/zookeeper:/opt/bitnami/zookeeper/logs
+    restart: unless-stopped
+    networks:
+      - kafka-network
+
+  kafka:
+    image: docker.io/bitnamilegacy/kafka:2.8.1
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,EXTERNAL://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://your-host-ip:9092,EXTERNAL://your-host-ip:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_NUM_PARTITIONS=3
+      - KAFKA_CFG_DEFAULT_REPLICATION_FACTOR=1
+      - KAFKA_CFG_LOG_RETENTION_HOURS=168
+      - KAFKA_CFG_LOG_RETENTION_BYTES=1073741824
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_CFG_DELETE_TOPIC_ENABLE=true
+      - KAFKA_CFG_LOG_DIRS=/bitnami/kafka/data
+      - KAFKA_LOG_DIR=/opt/bitnami/kafka/logs
+      - TZ=Asia/Shanghai
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    volumes:
+      - ./data/kafka:/bitnami/kafka/data
+      - ./logs/kafka:/opt/bitnami/kafka/logs
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    networks:
+      - kafka-network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    ports:
+      - "8080:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+      - TZ=Asia/Shanghai
+    restart: unless-stopped
+    depends_on:
+      - kafka
+      - zookeeper
+    networks:
+      - kafka-network
+
+networks:
+  kafka-network:
+    driver: bridge
