@@ -33,6 +33,7 @@ services:
       - PMA_PORT=3306
       - PMA_USER=root
       - PMA_PASSWORD=root123456
+      - TZ=Asia/Shanghai
     restart: unless-stopped
     depends_on:
       - mysql
