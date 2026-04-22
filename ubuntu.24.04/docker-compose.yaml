@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  ubuntu-ssh:
+    build: .
+    container_name: ubuntu-24-ssh
+    ports:
+      - "2022:22"
+    tty: true
+    stdin_open: true
