@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  nacos1:
+    image: nacos/nacos-server:v2.4.3
+    container_name: nacos1
+    hostname: nacos1
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
+      - "7848:7848"
+    environment:
+      - MODE=cluster
+      - EMBEDDED_STORAGE=embedded
+      - NACOS_SERVERS=nacos1:8848 nacos2:8858 nacos3:8868
+      - NACOS_APPLICATION_PORT=8848
+      - PREFER_HOST_MODE=hostname
+      - NACOS_AUTH_ENABLE=true
+      - NACOS_AUTH_TOKEN=VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg5QUJDREVGRw==
+      - NACOS_AUTH_IDENTITY_KEY=nacos
+      - NACOS_AUTH_IDENTITY_VALUE=nacos
+      - JVM_XMS=512m
+      - JVM_XMX=512m
+      - JVM_XMN=256m
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data/nacos1:/home/nacos/data
+      - ./logs/nacos1:/home/nacos/logs
+    restart: unless-stopped
+    networks:
+      - nacos-cluster-network
+
+  nacos2:
+    image: nacos/nacos-server:v2.4.3
+    container_name: nacos2
+    hostname: nacos2
+    ports:
+      - "8858:8858"
+      - "9858:9858"
+      - "9859:9859"
+      - "7858:7858"
+    environment:
+      - MODE=cluster
+      - EMBEDDED_STORAGE=embedded
+      - NACOS_SERVERS=nacos1:8848 nacos2:8858 nacos3:8868
+      - NACOS_APPLICATION_PORT=8858
+      - PREFER_HOST_MODE=hostname
+      - NACOS_AUTH_ENABLE=true
+      - NACOS_AUTH_TOKEN=VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg5QUJDREVGRw==
+      - NACOS_AUTH_IDENTITY_KEY=nacos
+      - NACOS_AUTH_IDENTITY_VALUE=nacos
+      - JVM_XMS=512m
+      - JVM_XMX=512m
+      - JVM_XMN=256m
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data/nacos2:/home/nacos/data
+      - ./logs/nacos2:/home/nacos/logs
+    restart: unless-stopped
+    networks:
+      - nacos-cluster-network
+
+  nacos3:
+    image: nacos/nacos-server:v2.4.3
+    container_name: nacos3
+    hostname: nacos3
+    ports:
+      - "8868:8868"
+      - "9868:9868"
+      - "9869:9869"
+      - "7868:7868"
+    environment:
+      - MODE=cluster
+      - EMBEDDED_STORAGE=embedded
+      - NACOS_SERVERS=nacos1:8848 nacos2:8858 nacos3:8868
+      - NACOS_APPLICATION_PORT=8868
+      - PREFER_HOST_MODE=hostname
+      - NACOS_AUTH_ENABLE=true
+      - NACOS_AUTH_TOKEN=VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg5QUJDREVGRw==
+      - NACOS_AUTH_IDENTITY_KEY=nacos
+      - NACOS_AUTH_IDENTITY_VALUE=nacos
+      - JVM_XMS=512m
+      - JVM_XMX=512m
+      - JVM_XMN=256m
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data/nacos3:/home/nacos/data
+      - ./logs/nacos3:/home/nacos/logs
+    restart: unless-stopped
+    networks:
+      - nacos-cluster-network
+
+networks:
+  nacos-cluster-network:
+    driver: bridge

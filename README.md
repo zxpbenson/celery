@@ -6,14 +6,16 @@
 
 ```
 .
-├── kafka2/     # Kafka 消息队列 (2.x版本)
-├── kafka3/     # Kafka 消息队列 (3.x版本)
-├── kafka4/     # Kafka 消息队列 (4.x版本)
-├── mysql/      # MySQL 数据库
-├── nginx/      # Nginx 反向代理/Web服务器
-├── nsq/        # NSQ 分布式消息队列
-├── redis/      # Redis 缓存/消息队列
-└── ubuntu.24.04/ # Ubuntu 24.04 开发环境
+├── kafka2/         # Kafka 消息队列 (2.x版本)
+├── kafka3/         # Kafka 消息队列 (3.x版本)
+├── kafka4/         # Kafka 消息队列 (4.x版本)
+├── mysql/          # MySQL 数据库
+├── nacos/          # Nacos 单机 (Derby)
+├── nacos-cluster/  # Nacos 集群 (Derby + Raft)
+├── nginx/          # Nginx 反向代理/Web服务器
+├── nsq/            # NSQ 分布式消息队列
+├── redis/          # Redis 缓存/消息队列
+└── ubuntu.24.04/   # Ubuntu 24.04 开发环境
 ```
 
 ## 🚀 快速开始
@@ -57,6 +59,9 @@
 
 ### MySQL
 最流行的开源关系型数据库，适用于各种应用场景。
+
+### Nacos (nacos, nacos-cluster)
+阿里巴巴开源的动态服务发现、配置管理和服务管理平台。`nacos/` 提供单机模式（内嵌 Derby），开箱即用；`nacos-cluster/` 提供 3 节点集群，使用 Derby + JRaft 内嵌存储，无需外置 MySQL 即可高可用。
 
 ### Nginx
 高性能的 HTTP 和反向代理服务器，也是一个 IMAP/POP3/SMTP 服务器。
